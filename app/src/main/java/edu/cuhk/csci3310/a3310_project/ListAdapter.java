@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class ListAdapter extends RecyclerView.Adapter {
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
     private List lists;
     private OnListClickListener listener;
 
@@ -31,32 +31,19 @@ public class ListAdapter extends RecyclerView.Adapter {
         return new ListViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ListViewHolder holder_ = (ListViewHolder) holder;
-        edu.cuhk.csci3310.a3310_project.TodoList todoList = (TodoList) lists.get(position);
-        holder_.titleTextView.setText(todoList.getTitle());
-        holder_.countTextView.setText(String.valueOf(todoList.getTaskCount()));
 
-        holder_.itemView.setOnClickListener(v -> {
+    @Override
+    public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
+        edu.cuhk.csci3310.a3310_project.TodoList todoList = (TodoList) lists.get(position);
+        holder.titleTextView.setText(todoList.getTitle());
+        holder.countTextView.setText(String.valueOf(todoList.getTaskCount()));
+
+        holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onListClick(todoList);
             }
         });
     }
-//    @Override
-
-//    public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-//        edu.cuhk.csci3310.a3310_project.TodoList todoList = (TodoList) lists.get(position);
-//        holder.titleTextView.setText(todoList.getTitle());
-//        holder.countTextView.setText(String.valueOf(todoList.getTaskCount()));
-//
-//        holder.itemView.setOnClickListener(v -> {
-//            if (listener != null) {
-//                listener.onListClick(todoList);
-//            }
-//        });
-//    }
 
     @Override
     public int getItemCount() {

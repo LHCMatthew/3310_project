@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class TaskAdapter extends RecyclerView.Adapter {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> tasks;
     private OnTaskClickListener listener;
 
@@ -38,12 +38,8 @@ public class TaskAdapter extends RecyclerView.Adapter {
         return new TaskViewHolder(view);
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-    }
-
-    //    @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         edu.cuhk.csci3310.a3310_project.Task task = tasks.get(position);
         holder.titleTextView.setText(task.getTitle());
