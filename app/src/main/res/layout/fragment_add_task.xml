@@ -10,10 +10,17 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Task Title -->
+        <TextView
+            android:id="@+id/taskTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Task Title*" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Task Title">
+            android:hint="Enter task title">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_task_title"
@@ -21,11 +28,19 @@
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <!-- Description -->
+        <TextView
+            android:id="@+id/Description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Description">
+            android:text="Description" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:hint="Enter task description">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_task_description"
@@ -35,8 +50,89 @@
                 android:minLines="3" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Other form fields for list, due date, priority, etc. -->
+        <!-- List Selection (Dropdown) -->
+        <TextView
+            android:id="@+id/listLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="List" />
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Select item"
+            android:minHeight="48dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"><!-- Ensure minimum height -->
+
+
+        <AutoCompleteTextView
+            android:id="@+id/list_dropdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true"
+            android:minHeight="48dp" /> <!-- Ensure minimum height -->
+    </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Due Date (Date Picker) -->
+        <TextView
+            android:id="@+id/dueDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Due Date" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Select Due Date">
+
+            <EditText
+                android:id="@+id/due_date_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Priority Selection -->
+        <TextView
+            android:id="@+id/priorityLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Priority" />
+
+        <RadioGroup
+            android:id="@+id/priority_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/priority_high"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="High" />
+
+            <RadioButton
+                android:id="@+id/priority_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Medium" />
+
+            <RadioButton
+                android:id="@+id/priority_low"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Low" />
+        </RadioGroup>
+
+        <!-- Save and Cancel Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
