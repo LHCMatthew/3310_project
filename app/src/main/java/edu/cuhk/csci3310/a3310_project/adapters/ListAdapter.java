@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.a3310_project;
+package edu.cuhk.csci3310.a3310_project.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +10,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import edu.cuhk.csci3310.a3310_project.R;
+import edu.cuhk.csci3310.a3310_project.models.TodoList;
+
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
     private List lists;
     private OnListClickListener listener;
 
     public interface OnListClickListener {
-        void onListClick(edu.cuhk.csci3310.a3310_project.TodoList todoList);
+        void onListClick(TodoList todoList);
     }
 
     public ListAdapter(List lists, OnListClickListener listener) {
@@ -34,7 +37,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ListViewHolder holder, int position) {
-        edu.cuhk.csci3310.a3310_project.TodoList todoList = (TodoList) lists.get(position);
+        TodoList todoList = (TodoList) lists.get(position);
         holder.titleTextView.setText(todoList.getTitle());
         holder.countTextView.setText(String.valueOf(todoList.getTaskCount()));
 

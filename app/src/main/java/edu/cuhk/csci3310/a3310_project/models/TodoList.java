@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.a3310_project;
+package edu.cuhk.csci3310.a3310_project.models;
 
 // TodoList.java
 public class TodoList {

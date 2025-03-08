@@ -1,24 +1,20 @@
-package edu.cuhk.csci3310.a3310_project;
+package edu.cuhk.csci3310.a3310_project.activity;
 
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-
 import androidx.fragment.app.Fragment;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import androidx.appcompat.widget.Toolbar;
 
-import edu.cuhk.csci3310.a3310_project.ListsFragment;
-import edu.cuhk.csci3310.a3310_project.AddTaskFragment;
+import edu.cuhk.csci3310.a3310_project.fragments.ListsFragment;
+import edu.cuhk.csci3310.a3310_project.fragments.AddTaskFragment;
+import edu.cuhk.csci3310.a3310_project.R;
+import edu.cuhk.csci3310.a3310_project.fragments.TasksFragment;
 
 // MainActivity.java
 public class MainActivity extends AppCompatActivity {

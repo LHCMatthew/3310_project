@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.a3310_project;
+package edu.cuhk.csci3310.a3310_project.fragments;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
+
+import edu.cuhk.csci3310.a3310_project.R;
 
 public class AddTaskFragment extends Fragment {
     private EditText titleEditText;

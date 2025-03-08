@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.a3310_project;
+package edu.cuhk.csci3310.a3310_project.adapters;
 
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -16,13 +16,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import edu.cuhk.csci3310.a3310_project.R;
+import edu.cuhk.csci3310.a3310_project.models.Task;
+
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> tasks;
     private OnTaskClickListener listener;
 
     public interface OnTaskClickListener {
-        void onTaskClick(edu.cuhk.csci3310.a3310_project.Task task);
-        void onTaskCheckChanged(edu.cuhk.csci3310.a3310_project.Task task, boolean isChecked);
+        void onTaskClick(Task task);
+        void onTaskCheckChanged(Task task, boolean isChecked);
     }
 
     public TaskAdapter(List<Task> tasks, OnTaskClickListener listener) {
@@ -41,7 +44,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        edu.cuhk.csci3310.a3310_project.Task task = tasks.get(position);
+        Task task = tasks.get(position);
         holder.titleTextView.setText(task.getTitle());
         holder.descriptionTextView.setText(task.getDescription());
 

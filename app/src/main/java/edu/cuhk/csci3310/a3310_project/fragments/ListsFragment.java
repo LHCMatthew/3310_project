@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.a3310_project;
+package edu.cuhk.csci3310.a3310_project.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.cuhk.csci3310.a3310_project.R;
+import edu.cuhk.csci3310.a3310_project.adapters.ListAdapter;
+import edu.cuhk.csci3310.a3310_project.models.TodoList;
 
 public class ListsFragment extends Fragment implements ListAdapter.OnListClickListener {
     private RecyclerView recyclerView;
@@ -41,15 +45,15 @@ public class ListsFragment extends Fragment implements ListAdapter.OnListClickLi
         // In a real app, load from database
         // For demo, use dummy data
         todoLists.clear();
-        todoLists.add(new edu.cuhk.csci3310.a3310_project.TodoList(1, "Work", 4));
-        todoLists.add(new edu.cuhk.csci3310.a3310_project.TodoList(2, "Personal", 2));
-        todoLists.add(new edu.cuhk.csci3310.a3310_project.TodoList(3, "Shopping", 5));
-        todoLists.add(new edu.cuhk.csci3310.a3310_project.TodoList(4, "Homework", 3));
+        todoLists.add(new TodoList(1, "Work", 4));
+        todoLists.add(new TodoList(2, "Personal", 2));
+        todoLists.add(new TodoList(3, "Shopping", 5));
+        todoLists.add(new TodoList(4, "Homework", 3));
         adapter.notifyDataSetChanged();
     }
 
     @Override
-    public void onListClick(edu.cuhk.csci3310.a3310_project.TodoList todoList) {
+    public void onListClick(TodoList todoList) {
         // Navigate to TasksFragment
         Bundle args = new Bundle();
         args.putLong("listId", todoList.getId());

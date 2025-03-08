@@ -1,4 +1,4 @@
-package edu.cuhk.csci3310.a3310_project;
+package edu.cuhk.csci3310.a3310_project.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.cuhk.csci3310.a3310_project.R;
+import edu.cuhk.csci3310.a3310_project.adapters.TaskAdapter;
+import edu.cuhk.csci3310.a3310_project.models.Task;
 
 public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickListener {
     private RecyclerView recyclerView;
@@ -58,17 +62,17 @@ public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickLi
 
         // Create dummy tasks based on listId
         if (listId == 1) { // Work list
-            tasks.add(new edu.cuhk.csci3310.a3310_project.Task(1, "Finish project proposal", "Complete the document",
+            tasks.add(new Task(1, "Finish project proposal", "Complete the document",
                     listId, System.currentTimeMillis() + 86400000 * 3, 2, false));
-            tasks.add(new edu.cuhk.csci3310.a3310_project.Task(2, "Team meeting", "Discuss project timeline",
+            tasks.add(new Task(2, "Team meeting", "Discuss project timeline",
                     listId, System.currentTimeMillis() - 86400000, 1, true));
-            tasks.add(new edu.cuhk.csci3310.a3310_project.Task(3, "Review code changes", "Check PR #42",
+            tasks.add(new Task(3, "Review code changes", "Check PR #42",
                     listId, System.currentTimeMillis(), 1, false));
-            tasks.add(new edu.cuhk.csci3310.a3310_project.Task(4, "Update documentation", "Update API docs",
+            tasks.add(new Task(4, "Update documentation", "Update API docs",
                     listId, System.currentTimeMillis() + 86400000 * 6, 0, false));
         } else {
             // Add other dummy tasks for other lists
-            tasks.add(new edu.cuhk.csci3310.a3310_project.Task(5, "Example task for " + listTitle, "Description",
+            tasks.add(new Task(5, "Example task for " + listTitle, "Description",
                     listId, System.currentTimeMillis(), 1, false));
         }
 
@@ -76,7 +80,7 @@ public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickLi
     }
 
     @Override
-    public void onTaskClick(edu.cuhk.csci3310.a3310_project.Task task) {
+    public void onTaskClick(Task task) {
         // Open task edit fragment
         Bundle args = new Bundle();
         args.putLong("taskId", task.getId());
@@ -91,7 +95,7 @@ public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickLi
     }
 
     @Override
-    public void onTaskCheckChanged(edu.cuhk.csci3310.a3310_project.Task task, boolean isChecked) {
+    public void onTaskCheckChanged(Task task, boolean isChecked) {
         // Update task completed status
         task.setCompleted(isChecked);
         // In a real app, update database
