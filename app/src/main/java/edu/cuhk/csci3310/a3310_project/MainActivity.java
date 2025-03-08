@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,21 +55,20 @@ public class MainActivity extends AppCompatActivity {
 
         // Setup bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+        bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 
-            switch (item.getItemId()) {
-//                case R.id.nav_lists:
-//                    selectedFragment = new ListsFragment();
-//                    break;
-//                case R.id.nav_today:
-//                    // Create today fragment
-//                    selectedFragment = new TodayFragment();
-//                    break;
-//                case R.id.nav_stats:
-//                    // Create stats fragment
-//                    selectedFragment = new StatsFragment();
-//                    break;
+            if (item.getItemId() == R.id.nav_lists)
+            {
+                selectedFragment = new ListsFragment();
+            }
+            else if (item.getItemId() == R.id.nav_today)
+            {
+                // selectedFragment = new TodayFragment(); (need to be implemented)
+            }
+            else
+            {
+                // selectedFragment = new StatsFragment(); (need to be implemented)
             }
 
             if (selectedFragment != null) {
