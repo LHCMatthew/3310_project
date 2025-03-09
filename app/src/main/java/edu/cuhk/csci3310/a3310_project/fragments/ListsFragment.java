@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,12 +17,14 @@ import java.util.List;
 
 import edu.cuhk.csci3310.a3310_project.R;
 import edu.cuhk.csci3310.a3310_project.adapters.ListAdapter;
+import edu.cuhk.csci3310.a3310_project.database.TodoListRepository;
 import edu.cuhk.csci3310.a3310_project.models.TodoList;
 
 public class ListsFragment extends Fragment implements ListAdapter.OnListClickListener {
     private RecyclerView recyclerView;
     private ListAdapter adapter;
     private List todoLists = new ArrayList<>();
+    private TodoListRepository repository;
 
     @Nullable
     @Override
@@ -29,6 +32,9 @@ public class ListsFragment extends Fragment implements ListAdapter.OnListClickLi
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lists, container, false);
         recyclerView = view.findViewById(R.id.recycler_view_lists);
+
+        // Initialize repository upon startup
+        repository = new TodoListRepository(getContext());
 
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -41,15 +47,35 @@ public class ListsFragment extends Fragment implements ListAdapter.OnListClickLi
         return view;
     }
 
+    // Reload lists when loaded back to this fragment
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Reload lists when coming back to this fragment
+        loadLists();
+    }
+
+    // Load lists from database
     private void loadLists() {
         // In a real app, load from database
         // For demo, use dummy data
         todoLists.clear();
-        todoLists.add(new TodoList(1, "Work", 4));
-        todoLists.add(new TodoList(2, "Personal", 2));
-        todoLists.add(new TodoList(3, "Shopping", 5));
-        todoLists.add(new TodoList(4, "Homework", 3));
-        adapter.notifyDataSetChanged();
+        todoLists.addAll(repository.getAllLists());
+        adapter.updateLists(todoLists);
+    }
+
+    // Add a new list
+    public void addNewList(String title) {
+        TodoList newList = new TodoList();
+        newList.setTitle(title);
+
+        // Insert into database
+        long listId = repository.insertList(newList);
+
+        if (listId != -1) {
+            // Reload lists to show the new entry
+            loadLists();
+        }
     }
 
     @Override

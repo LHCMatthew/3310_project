@@ -2,24 +2,44 @@ package edu.cuhk.csci3310.a3310_project.models;
 
 // TodoList.java
 public class TodoList {
-    private final long id;
-    private final String title;
+    private long id;
+    private String title;
     private int taskCount; // For displaying count in UI
 
-    // Constructors, getters, setters
-    public TodoList(long id_, String title_, int taskCount_)
-    {
-        id = id_;
-        title = title_;
-        taskCount = taskCount_;
+    // Default constructor for creating new list
+    public TodoList() {
+    }
+
+    // Constructor for creating list from database
+    public TodoList(long id, String title) {
+        this.id = id;
+        this.title = title;
+        this.taskCount = 0;
+    }
+    public TodoList(long id, String title, int taskCount) {
+        this.id = id;
+        this.title = title;
+        this.taskCount = taskCount;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getId() {
         return id;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTaskCount(int taskCount) {
+        this.taskCount = taskCount;
     }
 
     public int getTaskCount() {

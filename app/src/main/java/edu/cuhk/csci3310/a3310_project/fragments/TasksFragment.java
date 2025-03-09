@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import edu.cuhk.csci3310.a3310_project.R;
 import edu.cuhk.csci3310.a3310_project.adapters.TaskAdapter;
+import edu.cuhk.csci3310.a3310_project.database.TaskRepository;
 import edu.cuhk.csci3310.a3310_project.models.Task;
 
 public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickListener {
@@ -25,6 +27,7 @@ public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickLi
     private List tasks = new ArrayList<>();
     private long listId;
     private String listTitle;
+    private TaskRepository repository;
 
     @Nullable
     @Override
@@ -32,6 +35,9 @@ public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickLi
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tasks, container, false);
         recyclerView = view.findViewById(R.id.recycler_view_tasks);
+
+        // Initialize repository upon startup
+        repository = new TaskRepository(getContext());
 
         // Get arguments
         if (getArguments() != null) {
@@ -55,35 +61,30 @@ public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickLi
         return view;
     }
 
+    // Reload tasks when loaded back to this fragment
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Reload tasks when coming back to this fragment
+        loadTasks();
+    }
+
     private void loadTasks() {
         // In a real app, load from database
         // For demo, use dummy data
         tasks.clear();
-
-        // Create dummy tasks based on listId
-        if (listId == 1) { // Work list
-            tasks.add(new Task(1, "Finish project proposal", "Complete the document",
-                    listId, System.currentTimeMillis() + 86400000 * 3, 2, false));
-            tasks.add(new Task(2, "Team meeting", "Discuss project timeline",
-                    listId, System.currentTimeMillis() - 86400000, 1, true));
-            tasks.add(new Task(3, "Review code changes", "Check PR #42",
-                    listId, System.currentTimeMillis(), 1, false));
-            tasks.add(new Task(4, "Update documentation", "Update API docs",
-                    listId, System.currentTimeMillis() + 86400000 * 6, 0, false));
-        } else {
-            // Add other dummy tasks for other lists
-            tasks.add(new Task(5, "Example task for " + listTitle, "Description",
-                    listId, System.currentTimeMillis(), 1, false));
-        }
-
-        adapter.notifyDataSetChanged();
+        tasks.addAll(repository.getTasksByListId(listId));
+        adapter.updateTasks(tasks);
     }
 
+    //This has logical issues, should create one more fragment to show the task details, addTaskFragment
+    //should only be used to create or edit tasks
     @Override
     public void onTaskClick(Task task) {
         // Open task edit fragment
         Bundle args = new Bundle();
         args.putLong("taskId", task.getId());
+        args.putLong("listId", task.getListId());
 
         AddTaskFragment addTaskFragment = new AddTaskFragment();
         addTaskFragment.setArguments(args);
@@ -98,7 +99,11 @@ public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickLi
     public void onTaskCheckChanged(Task task, boolean isChecked) {
         // Update task completed status
         task.setCompleted(isChecked);
-        // In a real app, update database
+
+        // Update in database
+        repository.updateTask(task);
+
+        // Update UI
         adapter.notifyDataSetChanged();
     }
 }
