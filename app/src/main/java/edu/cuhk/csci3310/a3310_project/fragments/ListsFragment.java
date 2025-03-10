@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +36,9 @@ public class ListsFragment extends Fragment implements ListAdapter.OnListClickLi
 
         // Initialize repository upon startup
         repository = new TodoListRepository(getContext());
+
+        // set title
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("My list");
 
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
