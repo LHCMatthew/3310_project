@@ -211,4 +211,37 @@ public class TaskRepository {
 
         return new Task(id, title, description, listId, dueDate, priority, completed, category);
     }
+
+    public List<Task> getAllTasks() {
+        List<Task> tasks = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query(DatabaseHelper.TABLE_TASKS,
+                    null,  // Get all columns
+                    null,  // No WHERE clause
+                    null,  // No WHERE arguments
+                    null,  // No GROUP BY
+                    null,  // No HAVING
+                    DatabaseHelper.KEY_TASK_DUE_DATE + " ASC, " +
+                            DatabaseHelper.KEY_TASK_PRIORITY + " DESC");  // Order by due date and priority
+
+            if (cursor.moveToFirst()) {
+                do {
+                    Task task = cursorToTask(cursor);
+                    tasks.add(task);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting all tasks", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+
+        return tasks;
+    }
 }

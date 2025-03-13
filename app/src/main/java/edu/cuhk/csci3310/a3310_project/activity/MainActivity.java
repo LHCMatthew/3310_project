@@ -13,6 +13,7 @@ import edu.cuhk.csci3310.a3310_project.R;
 import edu.cuhk.csci3310.a3310_project.fragments.AddTaskFragment;
 import edu.cuhk.csci3310.a3310_project.fragments.ListsFragment;
 import edu.cuhk.csci3310.a3310_project.fragments.TasksFragment;
+import edu.cuhk.csci3310.a3310_project.fragments.TodayFragment;
 
 import android.text.InputType;
 import android.view.ViewGroup;
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (item.getItemId() == R.id.nav_today)
             {
-                // selectedFragment = new TodayFragment(); (need to be implemented)
+                 selectedFragment = new TodayFragment();
             }
             else
             {
