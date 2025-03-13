@@ -115,4 +115,9 @@ public class TodayFragment extends Fragment implements TaskAdapter.OnTaskClickLi
         taskRepository.updateTask(task);
         adapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onTaskDelete(Task task) {
+        // Delete task if applicable
+    }
 }
