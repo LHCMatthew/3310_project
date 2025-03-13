@@ -27,6 +27,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public interface OnTaskClickListener {
         void onTaskClick(Task task);
         void onTaskCheckChanged(Task task, boolean isChecked);
+        void onTaskDelete(Task task);
     }
 
     public TaskAdapter(List<Task> tasks, OnTaskClickListener listener) {
@@ -94,6 +95,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 listener.onTaskClick(task);
             }
         });
+
+        holder.deleteButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onTaskDelete(task);
+            }
+        });
     }
 
     @Override
@@ -112,6 +119,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         TextView descriptionTextView;
         TextView dueTextView;
         View priorityView;
+        View deleteButton;
 
         TaskViewHolder(View itemView) {
             super(itemView);
@@ -120,6 +128,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             descriptionTextView = itemView.findViewById(R.id.text_task_description);
             dueTextView = itemView.findViewById(R.id.text_task_due);
             priorityView = itemView.findViewById(R.id.view_priority);
+            deleteButton = itemView.findViewById(R.id.btn_delete_task);
         }
     }
 }

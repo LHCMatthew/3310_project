@@ -18,7 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
             android:id="@+id/text_task_title"
@@ -52,14 +53,25 @@
             android:textStyle="italic"
             app:layout_constraintStart_toEndOf="@+id/checkbox_task"
             app:layout_constraintTop_toBottomOf="@+id/text_task_description"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/btn_delete_task" />
 
         <View
             android:id="@+id/view_priority"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:background="@drawable/circle_shape"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text_task_title" />
+            app:layout_constraintTop_toTopOf="@+id/text_task_title"
+            android:layout_marginEnd="4dp"/>
+
+        <ImageView
+            android:id="@+id/btn_delete_task"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_delete"
+            android:contentDescription="Delete task"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tint="@android:color/holo_red_dark" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

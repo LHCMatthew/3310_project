@@ -106,4 +106,17 @@ public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickLi
         // Update UI
         adapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onTaskDelete(Task task) {
+        // Delete task from database
+        repository.deleteTask(task.getId());
+
+        // Update UI
+        tasks.remove(task);
+        adapter.notifyDataSetChanged();
+
+        // Show toast message
+        Toast.makeText(getContext(), "Task deleted", Toast.LENGTH_SHORT).show();
+    }
 }

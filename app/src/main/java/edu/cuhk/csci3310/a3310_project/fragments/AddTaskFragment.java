@@ -254,6 +254,8 @@ public class AddTaskFragment extends Fragment {
             }
         }
 
+        Toast.makeText(getContext(), "Changes saved successfully!", Toast.LENGTH_SHORT).show();
+
         // Go back to tasks list
         getParentFragmentManager().popBackStack();
     }
