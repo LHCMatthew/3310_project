@@ -21,6 +21,8 @@ import edu.cuhk.csci3310.a3310_project.adapters.TaskAdapter;
 import edu.cuhk.csci3310.a3310_project.database.TaskRepository;
 import edu.cuhk.csci3310.a3310_project.models.Task;
 
+import android.widget.Toast;
+
 public class TodayFragment extends Fragment implements TaskAdapter.OnTaskClickListener {
     private RecyclerView recyclerView;
     private TaskAdapter adapter;
@@ -118,6 +120,14 @@ public class TodayFragment extends Fragment implements TaskAdapter.OnTaskClickLi
 
     @Override
     public void onTaskDelete(Task task) {
-        // Delete task if applicable
+        // Delete task from database
+        taskRepository.deleteTask(task.getId());
+    
+        // Update UI
+        tasks.remove(task);
+        adapter.notifyDataSetChanged();
+    
+        // Show toast message
+        Toast.makeText(getContext(), "Task deleted", Toast.LENGTH_SHORT).show();
     }
 }
