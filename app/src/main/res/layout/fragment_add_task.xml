@@ -78,25 +78,73 @@
 
         <!-- Due Date (Date Picker) -->
         <TextView
-            android:id="@+id/dueDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/input_due_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Due Date" />
+            android:padding="12dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:hint="Select date"/>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Select Due Date">
+            android:minHeight="48dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="16dp">
 
-            <EditText
-                android:id="@+id/due_date_input"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:focusable="false"
-                android:clickable="true" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_weight="1"
+                android:text="All day"
+                android:textSize="16sp"/>
+
+            <Switch
+                android:id="@+id/switch_all_day"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
+                android:padding="12dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/input_start_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="12dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:hint="Start time"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  —  "
+                android:padding="12dp"/>
+
+            <TextView
+                android:id="@+id/input_end_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="12dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:hint="End time"/>
+
+        </LinearLayout>
 
         <!-- Priority Selection -->
         <TextView

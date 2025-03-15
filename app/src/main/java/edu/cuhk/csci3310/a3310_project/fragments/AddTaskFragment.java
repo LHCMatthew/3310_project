@@ -1,6 +1,7 @@
 package edu.cuhk.csci3310.a3310_project.fragments;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,9 +20,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import edu.cuhk.csci3310.a3310_project.R;
 import edu.cuhk.csci3310.a3310_project.database.TaskRepository;
@@ -32,7 +38,10 @@ public class AddTaskFragment extends Fragment {
     private EditText titleEditText;
     private EditText descriptionEditText;
     private AutoCompleteTextView listDropdown;
-    private EditText dueDateInput;
+    private TextView dueDateInput, startTimeInput, endTimeInput;
+    private Switch allDaySwitch;
+    private long selectedStartTime;
+    private long selectedEndTime;
     private RadioGroup priorityRadioGroup;
     private Button saveButton;
     private Button cancelButton;
@@ -58,7 +67,10 @@ public class AddTaskFragment extends Fragment {
         titleEditText = view.findViewById(R.id.edit_task_title);
         descriptionEditText = view.findViewById(R.id.edit_task_description);
         listDropdown = view.findViewById(R.id.list_dropdown);
-        dueDateInput = view.findViewById(R.id.due_date_input);
+        dueDateInput = view.findViewById(R.id.input_due_date);
+        startTimeInput = view.findViewById(R.id.input_start_time);
+        endTimeInput = view.findViewById(R.id.input_end_time);
+        allDaySwitch = view.findViewById(R.id.switch_all_day);
         priorityRadioGroup = view.findViewById(R.id.priority_radio_group);
         saveButton = view.findViewById(R.id.button_save);
         cancelButton = view.findViewById(R.id.button_cancel);
@@ -84,6 +96,19 @@ public class AddTaskFragment extends Fragment {
 
         // Setup due date picker
         dueDateInput.setOnClickListener(v -> showDatePicker());
+        startTimeInput.setOnClickListener(v -> showTimePicker(true));
+        endTimeInput.setOnClickListener(v -> showTimePicker(false));
+
+        allDaySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            startTimeInput.setEnabled(!isChecked);
+            endTimeInput.setEnabled(!isChecked);
+            if (isChecked) {
+                startTimeInput.setText("All day");
+                endTimeInput.setText("All day");
+            } else {
+                updateTimeDisplay();
+            }
+        });
 
         // Setup button listeners
         saveButton.setOnClickListener(v -> saveTask());
@@ -152,6 +177,61 @@ public class AddTaskFragment extends Fragment {
                 year, month, day
         );
         datePickerDialog.show();
+    }
+
+    private void showTimePicker(boolean isStartTime) {
+        if (selectedDueDate == 0) {
+            Toast.makeText(getContext(), "Please select a date first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        if (isStartTime && selectedStartTime > 0) {
+            calendar.setTimeInMillis(selectedStartTime);
+        } else if (!isStartTime && selectedEndTime > 0) {
+            calendar.setTimeInMillis(selectedEndTime);
+        }
+
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                requireContext(),
+                (view, hourOfDay, selectedMinute) -> {
+                    Calendar selected = Calendar.getInstance();
+                    selected.setTimeInMillis(selectedDueDate);
+                    selected.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    selected.set(Calendar.MINUTE, selectedMinute);
+
+                    if (isStartTime) {
+                        selectedStartTime = selected.getTimeInMillis();
+                        if (selectedEndTime == 0) {
+                            // Set end time to 1 hour after start time by default
+                            Calendar endTime = (Calendar) selected.clone();
+                            endTime.add(Calendar.HOUR_OF_DAY, 1);
+                            selectedEndTime = endTime.getTimeInMillis();
+                        }
+                    } else {
+                        selectedEndTime = selected.getTimeInMillis();
+                    }
+                    updateTimeDisplay();
+                },
+                hour,
+                minute,
+                true
+        );
+        timePickerDialog.show();
+    }
+
+    private void updateTimeDisplay() {
+        if (selectedStartTime > 0) {
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            startTimeInput.setText(timeFormat.format(new Date(selectedStartTime)));
+        }
+        if (selectedEndTime > 0) {
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            endTimeInput.setText(timeFormat.format(new Date(selectedEndTime)));
+        }
     }
 
     private void loadTaskData() {
