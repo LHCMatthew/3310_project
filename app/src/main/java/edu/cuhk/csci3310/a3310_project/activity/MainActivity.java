@@ -35,6 +35,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Add FragmentManager listener to handle fab visibility
+        getSupportFragmentManager().addFragmentOnAttachListener((fragmentManager, fragment) -> {
+            if (fragment instanceof AddTaskFragment) {
+                fab.hide();
+            }
+        });
+
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            Fragment currentFragment = getSupportFragmentManager()
+                    .findFragmentById(R.id.fragment_container);
+            if (currentFragment != null && !(currentFragment instanceof AddTaskFragment)) {
+                fab.show();
+            }
+        });
+
         // Setup FAB
         fab = findViewById(R.id.fab_add);
         fab.setOnClickListener(v -> {
