@@ -4,10 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.sql.Time;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     // Database Info
     private static final String DATABASE_NAME = "todoDatabase";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Table Names
     public static final String TABLE_LISTS = "lists";
@@ -27,8 +29,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_TASK_DUE_DATE = "due_date";
     public static final String KEY_TASK_PRIORITY = "priority";
     public static final String KEY_TASK_COMPLETED = "completed";
-
     public static final String KEY_TASK_CATEGORY = "category";
+    public static final String KEY_START_TIME = "start_time";
+    public static final String KEY_END_TIME = "end_time";
+    public static final String KEY_COMPLETION_DATE = "completion_date";
+    public static final String ALL_DAY = "isallday";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -54,7 +59,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 KEY_TASK_DUE_DATE + " INTEGER," +
                 KEY_TASK_PRIORITY + " INTEGER," +
                 KEY_TASK_COMPLETED + " INTEGER," +
-                KEY_TASK_CATEGORY + " TEXT" +
+                KEY_TASK_CATEGORY + " TEXT," +
+                KEY_START_TIME + " INTEGER," +
+                KEY_END_TIME + " INTEGER," +
+                KEY_COMPLETION_DATE + " INTEGER," +
+                ALL_DAY + " INTEGER" +
                 ")";
 
         db.execSQL(CREATE_LISTS_TABLE);

@@ -6,6 +6,9 @@ public class Task {
     private String description;
     private long listId;
     private long dueDate;
+    private boolean allday;
+    private long startTime;
+    private long endTime;
     private int priority; // 0: Low, 1: Medium, 2: High
     private boolean isCompleted;
     private long completionDate;
@@ -17,20 +20,26 @@ public class Task {
         this.priority = 0;
         this.isCompleted = false;
         this.category = Category.OTHER;
+        this.allday = false;
     }
     // Constructors, getters, setters
 
-    public Task(long id_, String title_, String description_, long listId_, long dueDate_, int priority_, boolean isCompleted_, Category category_)
-    {
-        id = id_;
-        title = title_;
-        description = description_;
-        listId = listId_;
-        dueDate = dueDate_;
-        priority = priority_;
-        isCompleted = isCompleted_;
-        category = category_;
+
+    public Task(long id, String title, String description, long listId, long dueDate, boolean allday, long startTime, long endTime, int priority, boolean isCompleted, long completionDate, Category category) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.listId = listId;
+        this.dueDate = dueDate;
+        this.allday = allday;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.priority = priority;
+        this.isCompleted = isCompleted;
+        this.completionDate = completionDate;
+        this.category = category;
     }
+
     public long getId() {
         return id;
     }
@@ -85,6 +94,30 @@ public class Task {
 
     public void setCompleted(boolean isChecked) {
         isCompleted = isChecked;
+    }
+
+    public boolean isAllday() {
+        return allday;
+    }
+
+    public void setAllday(boolean allday) {
+        this.allday = allday;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
     }
 
     public Category getCategory() {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,30 @@ public class TaskRepository {
             } else {
                 values.putNull(DatabaseHelper.KEY_TASK_DUE_DATE);
             }
+
+            long startTime = task.getStartTime();
+            if (startTime > 0) {
+                values.put(DatabaseHelper.KEY_START_TIME, startTime);
+            } else {
+                values.putNull(DatabaseHelper.KEY_START_TIME);
+            }
+
+            long endTime = task.getEndTime();
+            if (endTime > 0) {
+                values.put(DatabaseHelper.KEY_END_TIME, endTime);
+            } else {
+                values.putNull(DatabaseHelper.KEY_END_TIME);
+            }
+
+            // Have some bugs between the interaction of the toggle button to here
+            if(task.isAllday()){
+                values.put(DatabaseHelper.ALL_DAY, 1);
+                values.put(DatabaseHelper.KEY_START_TIME, 0);
+                values.put(DatabaseHelper.KEY_END_TIME, 0);
+            } else {
+                values.put(DatabaseHelper.ALL_DAY, 0);
+            }
+
 
             // Insert the new row
             taskId = db.insert(DatabaseHelper.TABLE_TASKS, null, values);
@@ -143,6 +168,29 @@ public class TaskRepository {
                 values.putNull(DatabaseHelper.KEY_TASK_DUE_DATE);
             }
 
+            long startTime = task.getStartTime();
+            if (startTime > 0) {
+                values.put(DatabaseHelper.KEY_START_TIME, startTime);
+            } else {
+                values.putNull(DatabaseHelper.KEY_START_TIME);
+            }
+
+            long endTime = task.getEndTime();
+            if (endTime > 0) {
+                values.put(DatabaseHelper.KEY_END_TIME, endTime);
+            } else {
+                values.putNull(DatabaseHelper.KEY_END_TIME);
+            }
+
+            // Have some bugs between the interaction of the toggle button to here
+            if(task.isAllday()){
+                values.put(DatabaseHelper.ALL_DAY, 1);
+                values.put(DatabaseHelper.KEY_START_TIME, 0);
+                values.put(DatabaseHelper.KEY_END_TIME, 0);
+            } else {
+                values.put(DatabaseHelper.ALL_DAY, 0);
+            }
+
             rowsAffected = db.update(DatabaseHelper.TABLE_TASKS, values,
                     DatabaseHelper.KEY_TASK_ID + " = ?",
                     new String[]{String.valueOf(task.getId())});
@@ -197,19 +245,29 @@ public class TaskRepository {
         String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_TASK_TITLE));
         String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_TASK_DESCRIPTION));
         long listId = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_TASK_LIST_ID));
+        boolean allDay = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.ALL_DAY)) == 1;
         int priority = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_TASK_PRIORITY));
         boolean completed = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_TASK_COMPLETED)) == 1;
 
         // Get dueDate directly as long
-        long dueDate = 0;
+        long dueDate = 0, completionDate = 0, startTime = 0, endTime = 0;
 
         // Get the category
         Category category = Category.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_TASK_CATEGORY)));
         if (!cursor.isNull(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_TASK_DUE_DATE))) {
             dueDate = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_TASK_DUE_DATE));
         }
+        if(!cursor.isNull(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_COMPLETION_DATE))) {
+            completionDate = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_COMPLETION_DATE));
+        }
+        if(!cursor.isNull(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_START_TIME))) {
+            startTime = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_START_TIME));
+        }
+        if(!cursor.isNull(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_END_TIME))) {
+            endTime = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_END_TIME));
+        }
 
-        return new Task(id, title, description, listId, dueDate, priority, completed, category);
+        return new Task(id, title, description, listId, dueDate, allDay, startTime, endTime, priority, completed, completionDate, category);
     }
 
     public List<Task> getAllTasks() {

@@ -75,6 +75,7 @@ public class AddTaskFragment extends Fragment {
         saveButton = view.findViewById(R.id.button_save);
         cancelButton = view.findViewById(R.id.button_cancel);
 
+
         // Get arguments
         if (getArguments() != null) {
             taskId = getArguments().getLong("taskId", -1);
@@ -256,6 +257,22 @@ public class AddTaskFragment extends Fragment {
             dueDateInput.setText(day + "/" + month + "/" + year);
         }
 
+        selectedStartTime = task.getStartTime();
+        selectedEndTime = task.getEndTime();
+        if(task.isAllday()) {
+            allDaySwitch.setChecked(true);
+            startTimeInput.setEnabled(false);
+            endTimeInput.setEnabled(false);
+            startTimeInput.setText("All day");
+            endTimeInput.setText("All day");
+        }
+        else if(selectedStartTime > 0 && selectedEndTime > 0) {
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            startTimeInput.setText(timeFormat.format(new Date(selectedStartTime)));
+            endTimeInput.setText(timeFormat.format(new Date(selectedEndTime)));
+        }
+
+
         // Set priority
         int priority = task.getPriority();
         switch (priority) {
@@ -276,6 +293,7 @@ public class AddTaskFragment extends Fragment {
         String title = titleEditText.getText().toString().trim();
         String description = descriptionEditText.getText().toString().trim();
         int priority = getSelectedPriority();
+
 
         // Validate input
         if (title.isEmpty()) {
@@ -307,7 +325,13 @@ public class AddTaskFragment extends Fragment {
         task.setListId(selectedListId);
         task.setDueDate(selectedDueDate);
         task.setPriority(priority);
+        task.setAllday(allDaySwitch.isChecked());
         String selectedCategoryText = listDropdown.getText().toString().trim();
+
+        if(selectedStartTime > 0 && selectedEndTime > 0) {
+            task.setStartTime(selectedStartTime);
+            task.setEndTime(selectedEndTime);
+        }
 
         // Map displayed text to enum values
         Category selectedCategory = Category.OTHER; // Can be any default value
