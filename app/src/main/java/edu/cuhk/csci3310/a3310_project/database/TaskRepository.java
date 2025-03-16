@@ -244,4 +244,24 @@ public class TaskRepository {
 
         return tasks;
     }
+
+    public String getListNameById(long listId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String listName = "Unknown List";
+
+        Cursor cursor = db.query(
+                "lists",
+                new String[]{"title"},
+                "id = ?",
+                new String[]{String.valueOf(listId)},
+                null, null, null
+        );
+
+        if (cursor.moveToFirst()) {
+            listName = cursor.getString(cursor.getColumnIndexOrThrow("title"));
+        }
+        cursor.close();
+
+        return listName;
+    }
 }

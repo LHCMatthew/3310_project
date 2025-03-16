@@ -1,77 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="2dp">
+    app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="8dp">
+
+        <View
+            android:id="@+id/view_priority"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <CheckBox
             android:id="@+id/checkbox_task"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/view_priority"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_task_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/checkbox_task"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/view_priority" />
+            app:layout_constraintEnd_toStartOf="@+id/btn_delete_task"
+            app:layout_constraintStart_toEndOf="@id/checkbox_task"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_task_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/checkbox_task"
-            app:layout_constraintTop_toBottomOf="@+id/text_task_title"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            app:layout_constraintEnd_toStartOf="@+id/btn_delete_task"
+            app:layout_constraintStart_toEndOf="@id/checkbox_task"
+            app:layout_constraintTop_toBottomOf="@id/text_task_title" />
 
         <TextView
             android:id="@+id/text_task_due"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
-            android:textStyle="italic"
-            app:layout_constraintStart_toEndOf="@+id/checkbox_task"
-            app:layout_constraintTop_toBottomOf="@+id/text_task_description"
-            app:layout_constraintEnd_toStartOf="@+id/btn_delete_task" />
-
-        <View
-            android:id="@+id/view_priority"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:background="@drawable/circle_shape"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text_task_title"
-            android:layout_marginEnd="4dp"/>
+            app:layout_constraintStart_toEndOf="@id/checkbox_task"
+            app:layout_constraintTop_toBottomOf="@id/text_task_description" />
 
         <ImageView
             android:id="@+id/btn_delete_task"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@android:drawable/ic_menu_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Delete task"
+            android:src="@android:drawable/ic_menu_delete"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:tint="@android:color/holo_red_dark" />
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-</com.google.android.material.card.MaterialCardView>
+</androidx.cardview.widget.CardView>
