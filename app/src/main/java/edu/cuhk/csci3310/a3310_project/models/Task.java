@@ -8,6 +8,7 @@ public class Task {
     private long dueDate;
     private int priority; // 0: Low, 1: Medium, 2: High
     private boolean isCompleted;
+    private long completionDate;
     private Category category;
 
     // Default constructor for creating new tasks
@@ -93,4 +94,8 @@ public class Task {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+    public long getCompletionDate() { return completionDate; }
+
+    public void setCompletionDate(long completionDate) { this.completionDate = completionDate; }
 }

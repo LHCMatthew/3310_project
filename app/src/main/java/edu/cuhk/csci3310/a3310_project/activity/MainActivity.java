@@ -12,6 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import edu.cuhk.csci3310.a3310_project.R;
 import edu.cuhk.csci3310.a3310_project.fragments.AddTaskFragment;
 import edu.cuhk.csci3310.a3310_project.fragments.ListsFragment;
+import edu.cuhk.csci3310.a3310_project.fragments.StatsFragment;
 import edu.cuhk.csci3310.a3310_project.fragments.TasksFragment;
 import edu.cuhk.csci3310.a3310_project.fragments.TodayFragment;
 
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else
             {
-                // selectedFragment = new StatsFragment(); (need to be implemented)
+                 selectedFragment = new StatsFragment();
             }
 
             if (selectedFragment != null) {
