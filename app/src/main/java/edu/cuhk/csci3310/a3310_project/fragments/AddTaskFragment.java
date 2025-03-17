@@ -225,13 +225,27 @@ public class AddTaskFragment extends Fragment {
     }
 
     private void updateTimeDisplay() {
+        // Update the time display based on selected start and end times
         if (selectedStartTime > 0) {
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
             startTimeInput.setText(timeFormat.format(new Date(selectedStartTime)));
+            // Check if end time is valid
+            if (selectedEndTime >= selectedStartTime && selectedEndTime > 0) {
+                endTimeInput.setText(timeFormat.format(new Date(selectedEndTime)));
+            }
+            // Reset the end time if it is invalid
+            else{
+                Toast.makeText(getContext(), "End time must be later than start time, please select again", Toast.LENGTH_SHORT).show();
+                selectedStartTime = 0;
+                selectedEndTime = 0;
+                startTimeInput.setText("");
+                endTimeInput.setText("");
+            }
         }
-        if (selectedEndTime > 0) {
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            endTimeInput.setText(timeFormat.format(new Date(selectedEndTime)));
+        // Reset the time display if start time is not set, -1 means both time are not set
+        else{
+            startTimeInput.setText("");
+            endTimeInput.setText("");
         }
     }
 
