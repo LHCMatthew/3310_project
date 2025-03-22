@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import edu.cuhk.csci3310.a3310_project.R;
 import edu.cuhk.csci3310.a3310_project.models.Task;
+import edu.cuhk.csci3310.a3310_project.notification.NotificationScheduler;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> tasks;
@@ -84,8 +85,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             holder.titleTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_primary));
         }
 
+        // In onBindViewHolder method, update the checkbox listener:
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (listener != null) {
+                // User marking the task as completed
+                if (isChecked) {
+                    // Cancel any pending notifications for this task
+                    NotificationScheduler.cancelTaskReminder(holder.itemView.getContext(), task.getId());
+                } else if (task.getDueDate() > System.currentTimeMillis()) {
+                    // Re-schedule notification if unmarking as completed and due date is in future
+                    NotificationScheduler.scheduleTaskReminder(holder.itemView.getContext(), task);
+                }
+
                 listener.onTaskCheckChanged(task, isChecked);
             }
         });

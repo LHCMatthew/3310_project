@@ -33,6 +33,7 @@ import edu.cuhk.csci3310.a3310_project.database.TodoListRepository;
 import edu.cuhk.csci3310.a3310_project.models.Category;
 import edu.cuhk.csci3310.a3310_project.models.Task;
 import edu.cuhk.csci3310.a3310_project.models.TodoList;
+import edu.cuhk.csci3310.a3310_project.notification.NotificationScheduler;
 
 public class AddTaskFragment extends Fragment {
     private EditText titleEditText;
@@ -227,6 +228,15 @@ public class AddTaskFragment extends Fragment {
     private void updateTimeDisplay() {
         // Update the time display based on selected start and end times
         if (selectedStartTime > 0) {
+            // Check if start time is valid, it cannot be in the past
+            if(selectedStartTime+ 60*1000 < System.currentTimeMillis()){
+                Toast.makeText(getContext(), "Start time must be later than current time, please select again", Toast.LENGTH_SHORT).show();
+                selectedStartTime = 0;
+                selectedEndTime = 0;
+                startTimeInput.setText("");
+                endTimeInput.setText("");
+                return;
+            }
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
             startTimeInput.setText(timeFormat.format(new Date(selectedStartTime)));
             // Check if end time is valid
@@ -371,6 +381,9 @@ public class AddTaskFragment extends Fragment {
                 return;
             }
         }
+
+        // Schedule notification for the task
+        NotificationScheduler.scheduleTaskReminder(requireContext(), task);
 
         Toast.makeText(getContext(), "Changes saved successfully!", Toast.LENGTH_SHORT).show();
 
