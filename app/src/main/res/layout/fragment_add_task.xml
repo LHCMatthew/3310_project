@@ -52,16 +52,16 @@
 
         <!-- List Selection (Dropdown) -->
         <TextView
-            android:id="@+id/listLabel"
+            android:id="@+id/categoryLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="List" />
+            android:text="Category" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Select item"
+            android:hint="Select Category"
             android:minHeight="48dp"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"><!-- Ensure minimum height -->
 
