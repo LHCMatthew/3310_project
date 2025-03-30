@@ -15,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import edu.cuhk.csci3310.a3310_project.R;
+import edu.cuhk.csci3310.a3310_project.fragments.AddListFragment;
 import edu.cuhk.csci3310.a3310_project.fragments.AddTaskFragment;
 import edu.cuhk.csci3310.a3310_project.fragments.ListsFragment;
 import edu.cuhk.csci3310.a3310_project.fragments.StatsFragment;
@@ -85,7 +86,13 @@ public class MainActivity extends AppCompatActivity {
 
             if (currentFragment instanceof ListsFragment) {
                 // Add new list
-                showAddListDialog();
+                Bundle args = new Bundle();
+                AddListFragment addListFragment = new AddListFragment();
+                addListFragment.setArguments(args);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, addListFragment)
+                        .addToBackStack(null)
+                        .commit();
             } else if (currentFragment instanceof TasksFragment) {
                 // Add new task
                 Bundle args = new Bundle();
@@ -138,46 +145,5 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container, new ListsFragment())
                     .commit();
         }
-    }
-
-    private void showAddListDialog() {
-        // Create an AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("New List");
-
-        // Set up the input
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setHint("Enter list name");
-
-        // Add padding to the input field
-        FrameLayout container = new FrameLayout(this);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-        params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-        input.setLayoutParams(params);
-        container.addView(input);
-        builder.setView(container);
-
-        // Set up the buttons
-        builder.setPositiveButton("Save", (dialog, which) -> {
-            String listTitle = input.getText().toString().trim();
-            if (!listTitle.isEmpty()) {
-                // Find the current ListsFragment and call its addNewList method
-                Fragment currentFragment = getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment_container);
-                if (currentFragment instanceof ListsFragment) {
-                    ((ListsFragment) currentFragment).addNewList(listTitle);
-                }
-            }
-        });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-        // Show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 }

@@ -47,7 +47,7 @@ public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickLi
 
         // Set title
         if (getActivity() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(listTitle);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("You are navigating on list: " + listTitle);
         }
 
         // Setup RecyclerView

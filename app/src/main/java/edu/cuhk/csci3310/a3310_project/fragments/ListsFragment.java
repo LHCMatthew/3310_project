@@ -37,9 +37,6 @@ public class ListsFragment extends Fragment implements ListAdapter.OnListClickLi
         // Initialize repository upon startup
         repository = new TodoListRepository(getContext());
 
-        // set title
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("My list");
-
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ListAdapter(todoLists, this);
