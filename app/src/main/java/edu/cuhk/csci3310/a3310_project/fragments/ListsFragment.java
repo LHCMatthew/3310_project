@@ -18,6 +18,7 @@ import java.util.List;
 
 import edu.cuhk.csci3310.a3310_project.R;
 import edu.cuhk.csci3310.a3310_project.adapters.ListAdapter;
+import edu.cuhk.csci3310.a3310_project.database.TaskRepository;
 import edu.cuhk.csci3310.a3310_project.database.TodoListRepository;
 import edu.cuhk.csci3310.a3310_project.models.TodoList;
 
@@ -40,12 +41,13 @@ public class ListsFragment extends Fragment implements ListAdapter.OnListClickLi
 
         recyclerView = view.findViewById(R.id.recycler_view_lists);
 
-        // Initialize repository upon startup
+        // Initialize repositories
         repository = new TodoListRepository(getContext());
+        TaskRepository taskRepository = new TaskRepository(getContext());
 
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ListAdapter(todoLists, this);
+        adapter = new ListAdapter(todoLists, this, taskRepository);
         recyclerView.setAdapter(adapter);
 
         // Load data

@@ -37,7 +37,7 @@ public class TodayFragment extends Fragment implements TaskAdapter.OnTaskClickLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tasks, container, false);
+        View view = inflater.inflate(R.layout.fragment_today, container, false);
         recyclerView = view.findViewById(R.id.recycler_view_tasks);
 
         // Initialize repository

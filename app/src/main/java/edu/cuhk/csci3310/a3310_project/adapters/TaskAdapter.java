@@ -1,5 +1,6 @@
 package edu.cuhk.csci3310.a3310_project.adapters;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -24,16 +26,31 @@ import edu.cuhk.csci3310.a3310_project.notification.NotificationScheduler;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
     private List<Task> tasks;
     private OnTaskClickListener listener;
+    private long currentWeekStartTime;
 
     public interface OnTaskClickListener {
-        void onTaskClick(Task task);
         void onTaskCheckChanged(Task task, boolean isChecked);
+        void onTaskClick(Task task);
         void onTaskDelete(Task task);
     }
 
     public TaskAdapter(List<Task> tasks, OnTaskClickListener listener) {
         this.tasks = tasks;
         this.listener = listener;
+        calculateCurrentWeekStartTime();
+    }
+
+    private void calculateCurrentWeekStartTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        // Roll back to Sunday
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        calendar.add(Calendar.DAY_OF_MONTH, -(dayOfWeek - Calendar.SUNDAY));
+        currentWeekStartTime = calendar.getTimeInMillis();
     }
 
     @NonNull
@@ -44,10 +61,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return new TaskViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = tasks.get(position);
+
         holder.titleTextView.setText(task.getTitle());
         holder.descriptionTextView.setText(task.getDescription());
 
@@ -59,6 +76,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         } else {
             holder.dueTextView.setText("No due date");
         }
+
+        // Check if task is before current week
+        boolean isHistoricalTask = task.getDueDate() < currentWeekStartTime;
 
         // Set priority color
         int color;
@@ -77,26 +97,36 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         // Set completed status
         holder.checkBox.setChecked(task.isCompleted());
-        if (task.isCompleted()) {
-            holder.titleTextView.setPaintFlags(holder.titleTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.titleTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_muted));
+
+        // TESTING ONLY - Comment or remove these lines after testing
+        // Original line: holder.checkBox.setEnabled(!isHistoricalTask);
+        // Now enabling all checkboxes for testing
+        holder.checkBox.setEnabled(true); // REMOVE AFTER TESTING
+
+        // Visual indicators for historical tasks
+        if (isHistoricalTask) {
+            holder.checkBox.setAlpha(0.7f); // TESTING: Changed from 0.5f to 0.7f for better visibility while testing
+            holder.itemView.setBackgroundColor(Color.parseColor("#F5F5F5")); // Light gray
+
+            // Add historical indicator
+            holder.dueTextView.setText(holder.dueTextView.getText() + " (Historical) *Checkbox can be checked for now as testing"); // Modified for testing
         } else {
-            holder.titleTextView.setPaintFlags(holder.titleTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            holder.titleTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_primary));
+            holder.checkBox.setAlpha(1.0f);
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
         }
 
-        // In onBindViewHolder method, update the checkbox listener:
-        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (listener != null) {
-                // User marking the task as completed
-                if (isChecked) {
-                    // Cancel any pending notifications for this task
-                    NotificationScheduler.cancelTaskReminder(holder.itemView.getContext(), task.getId());
-                } else if (task.getDueDate() > System.currentTimeMillis()) {
-                    // Re-schedule notification if unmarking as completed and due date is in future
-                    NotificationScheduler.scheduleTaskReminder(holder.itemView.getContext(), task);
-                }
+        if (task.isCompleted()) {
+            holder.titleTextView.setPaintFlags(holder.titleTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            holder.titleTextView.setPaintFlags(holder.titleTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
 
+
+        // TESTING ONLY - Comment or remove these lines after testing
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (buttonView.isPressed() && listener != null) {
+                // TESTING: Removed !isHistoricalTask condition to allow historical task updates
+                // Original condition: if (buttonView.isPressed() && !isHistoricalTask && listener != null)
                 listener.onTaskCheckChanged(task, isChecked);
             }
         });

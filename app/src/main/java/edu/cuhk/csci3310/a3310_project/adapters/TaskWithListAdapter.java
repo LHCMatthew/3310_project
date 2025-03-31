@@ -44,7 +44,7 @@ public class TaskWithListAdapter extends RecyclerView.Adapter<TaskWithListAdapte
 
         holder.titleTextView.setText(task.getTitle());
         holder.descriptionTextView.setText(task.getDescription());
-        holder.listNameTextView.setText("List: " + taskWithList.getListName());
+        holder.listNameTextView.setText(taskWithList.getListName());
 
         // Format date
         if (task.getDueDate() > 0) {

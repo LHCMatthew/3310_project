@@ -286,7 +286,7 @@ public class StatsFragment extends Fragment {
 
         // Configure chart display
         BarDataSet dataSet = new BarDataSet(entries, "Completion Rate (%)");
-        dataSet.setColor(ContextCompat.getColor(requireContext(), R.color.category_color_4));
+        dataSet.setColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary));
         dataSet.setValueTextSize(10f);
 
         // Format bar values to show percentage
