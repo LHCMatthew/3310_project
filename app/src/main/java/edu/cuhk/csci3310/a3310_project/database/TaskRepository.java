@@ -64,7 +64,6 @@ public class TaskRepository {
                 values.putNull(DatabaseHelper.KEY_END_TIME);
             }
 
-            // Have some bugs between the interaction of the toggle button to here
             if(task.isAllday()){
                 values.put(DatabaseHelper.ALL_DAY, 1);
                 values.put(DatabaseHelper.KEY_START_TIME, 0);
@@ -73,6 +72,13 @@ public class TaskRepository {
                 values.put(DatabaseHelper.ALL_DAY, 0);
             }
 
+            // Store the reminder time
+            long reminderTime = task.getReminderTime();
+            if (reminderTime > 0) {
+                values.put(DatabaseHelper.KEY_REMINDER_TIME, reminderTime);
+            } else {
+                values.putNull(DatabaseHelper.KEY_REMINDER_TIME);
+            }
 
             // Insert the new row
             taskId = db.insert(DatabaseHelper.TABLE_TASKS, null, values);
@@ -190,6 +196,13 @@ public class TaskRepository {
             } else {
                 values.put(DatabaseHelper.ALL_DAY, 0);
             }
+            // Store the reminder time
+            long reminderTime = task.getReminderTime();
+            if (reminderTime > 0) {
+                values.put(DatabaseHelper.KEY_REMINDER_TIME, reminderTime);
+            } else {
+                values.putNull(DatabaseHelper.KEY_REMINDER_TIME);
+            }
 
             rowsAffected = db.update(DatabaseHelper.TABLE_TASKS, values,
                     DatabaseHelper.KEY_TASK_ID + " = ?",
@@ -248,6 +261,7 @@ public class TaskRepository {
         boolean allDay = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.ALL_DAY)) == 1;
         int priority = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_TASK_PRIORITY));
         boolean completed = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_TASK_COMPLETED)) == 1;
+        long reminderTime = 0;
 
         // Get dueDate directly as long
         long dueDate = 0, completionDate = 0, startTime = 0, endTime = 0;
@@ -266,8 +280,11 @@ public class TaskRepository {
         if(!cursor.isNull(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_END_TIME))) {
             endTime = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_END_TIME));
         }
+        if(!cursor.isNull(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_REMINDER_TIME))) {
+            reminderTime = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_REMINDER_TIME));
+        }
 
-        return new Task(id, title, description, listId, dueDate, allDay, startTime, endTime, priority, completed, completionDate, category);
+        return new Task(id, title, description, listId, dueDate, allDay, startTime, endTime, priority, completed, completionDate, category, reminderTime);
     }
 
     public List<Task> getAllTasks() {

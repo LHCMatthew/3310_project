@@ -34,7 +34,7 @@ public class NotificationHelper {
     }
 
     // Show a task reminder notification
-    public static void showTaskReminderNotification(Context context, long taskId, String taskTitle, String listName) {
+    public static void showTaskReminderNotification(Context context, long taskId, String taskTitle, String listName, long reminderTime) {
         // Create an intent to open the app when notification is tapped
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -49,7 +49,7 @@ public class NotificationHelper {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_today)
                 .setContentTitle("Task Reminder")
-                .setContentText("Task \"" + taskTitle + "\" is due in 1 hour from now, don't forget!")
+                .setContentText("Task \"" + taskTitle + "\" is due in " + reminderTime + " minutes from now, don't forget!")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);

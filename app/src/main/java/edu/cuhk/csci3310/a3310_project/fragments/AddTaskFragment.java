@@ -53,6 +53,8 @@ public class AddTaskFragment extends Fragment {
     private List<TodoList> allLists = new ArrayList<>();
     private long selectedListId = -1;
     private long selectedDueDate = 0; // 0 means no due date
+    private TextView reminderTimeText;
+    private long reminderTimeOffset = 0; // in minutes before due date
 
     @Nullable
     @Override
@@ -75,6 +77,8 @@ public class AddTaskFragment extends Fragment {
         priorityRadioGroup = view.findViewById(R.id.priority_radio_group);
         saveButton = view.findViewById(R.id.button_save);
         cancelButton = view.findViewById(R.id.button_cancel);
+        reminderTimeText = view.findViewById(R.id.reminder_time_text);
+        reminderTimeText.setOnClickListener(v -> showReminderOptions());
 
 
         // Get arguments
@@ -122,6 +126,93 @@ public class AddTaskFragment extends Fragment {
         }
 
         return view;
+    }
+
+    private void showReminderOptions() {
+        if (selectedDueDate == 0) {
+            Toast.makeText(getContext(), "Please select a due date first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String[] options = {"None", "5 minutes before", "15 minutes before", "30 minutes before",
+                "1 hour before", "2 hours before", "1 day before", "Custom"};
+
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(requireContext());
+        builder.setTitle("Set Reminder")
+                .setItems(options, (dialog, which) -> {
+                    switch (which) {
+                        case 0: // None
+                            reminderTimeOffset = 0;
+                            reminderTimeText.setText("None");
+                            break;
+                        case 1: // 5 minutes
+                            reminderTimeOffset = 5;
+                            reminderTimeText.setText("5 minutes before");
+                            break;
+                        case 2: // 15 minutes
+                            reminderTimeOffset = 15;
+                            reminderTimeText.setText("15 minutes before");
+                            break;
+                        case 3: // 30 minutes
+                            reminderTimeOffset = 30;
+                            reminderTimeText.setText("30 minutes before");
+                            break;
+                        case 4: // 1 hour
+                            reminderTimeOffset = 60;
+                            reminderTimeText.setText("1 hour before");
+                            break;
+                        case 5: // 2 hours
+                            reminderTimeOffset = 120;
+                            reminderTimeText.setText("2 hours before");
+                            break;
+                        case 6: // 1 day
+                            reminderTimeOffset = 1440;
+                            reminderTimeText.setText("1 day before");
+                            break;
+                        case 7: // Custom
+                            showCustomReminderDialog();
+                            break;
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void showCustomReminderDialog() {
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_custom_reminder, null);
+        EditText hoursInput = dialogView.findViewById(R.id.hours_input);
+        EditText minutesInput = dialogView.findViewById(R.id.minutes_input);
+
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Custom Reminder")
+                .setView(dialogView)
+                .setPositiveButton("Set", (dialog, which) -> {
+                    try {
+                        int hours = hoursInput.getText().toString().isEmpty() ? 0 :
+                                Integer.parseInt(hoursInput.getText().toString());
+                        int minutes = minutesInput.getText().toString().isEmpty() ? 0 :
+                                Integer.parseInt(minutesInput.getText().toString());
+
+                        if (hours == 0 && minutes == 0) {
+                            Toast.makeText(getContext(), "Please enter a valid time", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        reminderTimeOffset = hours * 60 + minutes;
+                        String displayText = "";
+                        if (hours > 0) {
+                            displayText += hours + " hour" + (hours > 1 ? "s" : "");
+                        }
+                        if (minutes > 0) {
+                            if (!displayText.isEmpty()) displayText += " ";
+                            displayText += minutes + " minute" + (minutes > 1 ? "s" : "");
+                        }
+                        reminderTimeText.setText(displayText + " before");
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getContext(), "Please enter valid numbers", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void setupListDropdown() {
@@ -311,6 +402,21 @@ public class AddTaskFragment extends Fragment {
                 priorityRadioGroup.check(R.id.priority_low);
                 break;
         }
+
+        if (task.getReminderTime() > 0) {
+            reminderTimeOffset = task.getReminderTime();
+
+            // Format the reminder time display
+            long minutes = reminderTimeOffset;
+
+            String displayText = "";
+            if (minutes > 0) {
+                displayText += minutes + " minute" + (minutes > 1 ? "s" : "");
+            }
+            reminderTimeText.setText(displayText + " before");
+        } else {
+            reminderTimeText.setText("None");
+        }
     }
 
     private void saveTask() {
@@ -351,6 +457,7 @@ public class AddTaskFragment extends Fragment {
         task.setPriority(priority);
         task.setAllday(allDaySwitch.isChecked());
         String selectedCategoryText = listDropdown.getText().toString().trim();
+        task.setReminderTime(reminderTimeOffset);
 
         if(selectedStartTime > 0 && selectedEndTime > 0) {
             task.setStartTime(selectedStartTime);

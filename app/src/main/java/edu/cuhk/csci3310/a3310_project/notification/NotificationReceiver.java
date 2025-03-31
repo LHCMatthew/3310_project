@@ -25,7 +25,8 @@ public class NotificationReceiver extends BroadcastReceiver {
                         context,
                         task.getId(),
                         task.getTitle(),
-                        listName
+                        listName,
+                        task.getReminderTime()
                 );
             }
         }

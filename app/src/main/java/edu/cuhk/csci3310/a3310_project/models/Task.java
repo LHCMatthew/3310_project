@@ -13,6 +13,7 @@ public class Task {
     private boolean isCompleted;
     private long completionDate;
     private Category category;
+    private long ReminderTime;
 
     // Default constructor for creating new tasks
 
@@ -25,7 +26,7 @@ public class Task {
     // Constructors, getters, setters
 
 
-    public Task(long id, String title, String description, long listId, long dueDate, boolean allday, long startTime, long endTime, int priority, boolean isCompleted, long completionDate, Category category) {
+    public Task(long id, String title, String description, long listId, long dueDate, boolean allday, long startTime, long endTime, int priority, boolean isCompleted, long completionDate, Category category, long ReminderTime) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -38,6 +39,7 @@ public class Task {
         this.isCompleted = isCompleted;
         this.completionDate = completionDate;
         this.category = category;
+        this.ReminderTime = ReminderTime;
     }
 
     public long getId() {
@@ -131,4 +133,12 @@ public class Task {
     public long getCompletionDate() { return completionDate; }
 
     public void setCompletionDate(long completionDate) { this.completionDate = completionDate; }
+
+    public long getReminderTime() {
+        return ReminderTime;
+    }
+
+    public void setReminderTime(long reminderTime) {
+        ReminderTime = reminderTime;
+    }
 }

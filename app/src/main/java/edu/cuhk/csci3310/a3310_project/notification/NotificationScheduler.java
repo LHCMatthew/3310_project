@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -30,8 +31,9 @@ public class NotificationScheduler {
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
             );
 
-            // Set notification time (1 hour before start time)
-            long notificationTime = task.getStartTime() - (60 * 60 * 1000);
+            // Set notification time
+            long notificationTime = task.getStartTime() - task.getReminderTime() * 60 * 1000; // Convert minutes to milliseconds
+            Toast.makeText(context,task.getReminderTime() + "", Toast.LENGTH_SHORT).show();
 
             Log.d("NotificationScheduler", "Task: " + task.getTitle());
             Log.d("NotificationScheduler", "Current time: " + System.currentTimeMillis());
