@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,20 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.cuhk.csci3310.a3310_project.R;
+import edu.cuhk.csci3310.a3310_project.adapters.GroupedTaskAdapter;
 import edu.cuhk.csci3310.a3310_project.adapters.TaskAdapter;
-import edu.cuhk.csci3310.a3310_project.adapters.TaskWithListAdapter;
 import edu.cuhk.csci3310.a3310_project.database.TaskRepository;
 import edu.cuhk.csci3310.a3310_project.models.Task;
+import edu.cuhk.csci3310.a3310_project.models.TaskGroup;
 import edu.cuhk.csci3310.a3310_project.models.TaskWithList;
-
-import android.widget.Toast;
 
 public class TodayFragment extends Fragment implements TaskAdapter.OnTaskClickListener {
     private RecyclerView recyclerView;
-    private TaskWithListAdapter adapter;
+    private GroupedTaskAdapter adapter;
     private List<TaskWithList> tasksWithList = new ArrayList<>();
     private TaskRepository taskRepository;
 
@@ -48,7 +50,7 @@ public class TodayFragment extends Fragment implements TaskAdapter.OnTaskClickLi
 
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TaskWithListAdapter(tasksWithList, this);
+        adapter = new GroupedTaskAdapter(this);
         recyclerView.setAdapter(adapter);
 
         // Load tasks
@@ -91,34 +93,75 @@ public class TodayFragment extends Fragment implements TaskAdapter.OnTaskClickLi
             }
         }
 
+        // Group tasks by list
+        Map<String, List<TaskWithList>> tasksByList = new HashMap<>();
+        for (TaskWithList taskWithList : todayTasksWithList) {
+            String listName = taskWithList.getListName();
+            if (!tasksByList.containsKey(listName)) {
+                tasksByList.put(listName, new ArrayList<>());
+            }
+            tasksByList.get(listName).add(taskWithList);
+        }
+
+        // Create grouped items list
+        List<TaskGroup> groupedItems = new ArrayList<>();
+        for (Map.Entry<String, List<TaskWithList>> entry : tasksByList.entrySet()) {
+            // Add header
+            groupedItems.add(new TaskGroup(entry.getKey()));
+            // Add tasks
+            for (TaskWithList taskWithList : entry.getValue()) {
+                groupedItems.add(new TaskGroup(taskWithList));
+            }
+        }
+
+        // Save reference to update tasks
+        this.tasksWithList = todayTasksWithList;
+
         // Update adapter
-        this.tasksWithList.clear();
-        this.tasksWithList.addAll(todayTasksWithList);
-        adapter.updateTasksWithList(this.tasksWithList);
-    }
-
-    @Override
-    public void onTaskClick(Task task) {
-        // Open task edit fragment
-        Bundle args = new Bundle();
-        args.putLong("taskId", task.getId());
-        args.putLong("listId", task.getListId());
-
-        AddTaskFragment addTaskFragment = new AddTaskFragment();
-        addTaskFragment.setArguments(args);
-
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, addTaskFragment)
-                .addToBackStack(null)
-                .commit();
+        adapter.setItems(groupedItems);
     }
 
     @Override
     public void onTaskCheckChanged(Task task, boolean isChecked) {
         // Update task completed status
         task.setCompleted(isChecked);
+
+        // Set completion date if being marked as complete
+        if (isChecked) {
+            task.setCompletionDate(System.currentTimeMillis());
+        } else {
+            task.setCompletionDate(0);
+        }
+
+        // Update in database
         taskRepository.updateTask(task);
-        adapter.notifyDataSetChanged();
+
+        // Find and update the task in the tasksWithList collection
+        for (TaskWithList item : tasksWithList) {
+            if (item.getTask().getId() == task.getId()) {
+                item.getTask().setCompleted(isChecked);
+                if (isChecked) {
+                    item.getTask().setCompletionDate(System.currentTimeMillis());
+                } else {
+                    item.getTask().setCompletionDate(0);
+                }
+                break;
+            }
+        }
+
+        // Find position in adapter
+        int position = adapter.findTaskPosition(task.getId());
+        if (position != -1) {
+            recyclerView.post(() -> adapter.notifyItemChanged(position));
+        } else {
+            // Fallback to reloading all data
+            recyclerView.post(() -> loadTodaysTasks());
+        }
+    }
+
+    @Override
+    public void onTaskClick(Task task) {
+        // Handle task click (implementation not shown)
     }
 
     @Override
@@ -126,20 +169,8 @@ public class TodayFragment extends Fragment implements TaskAdapter.OnTaskClickLi
         // Delete task from database
         taskRepository.deleteTask(task.getId());
 
-        // Find and remove the TaskWithList object containing the deleted task
-        TaskWithList toRemove = null;
-        for (TaskWithList item : tasksWithList) {
-            if (item.getTask().getId() == task.getId()) {
-                toRemove = item;
-                break;
-            }
-        }
-
-        if (toRemove != null) {
-            tasksWithList.remove(toRemove);
-        }
-
-        adapter.notifyDataSetChanged();
+        // Reload the grouped tasks
+        recyclerView.post(() -> loadTodaysTasks());
 
         // Show toast message
         Toast.makeText(getContext(), "Task deleted", Toast.LENGTH_SHORT).show();

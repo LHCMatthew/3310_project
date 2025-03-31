@@ -32,6 +32,12 @@ public class ListsFragment extends Fragment implements ListAdapter.OnListClickLi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lists, container, false);
+
+        // Set title
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Welcome to Todo App!");
+        }
+
         recyclerView = view.findViewById(R.id.recycler_view_lists);
 
         // Initialize repository upon startup

@@ -59,11 +59,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Add FragmentManager listener to handle fab visibility
         getSupportFragmentManager().addFragmentOnAttachListener((fragmentManager, fragment) -> {
-            if (fragment instanceof AddTaskFragment || fragment instanceof TodayFragment) {
-                fab.hide();
+            if (fragment instanceof ListsFragment || fragment instanceof TasksFragment) {
+                fab.show();
             }
             else {
-                fab.show();
+                fab.hide();
             }
         });
 

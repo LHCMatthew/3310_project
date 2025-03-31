@@ -47,7 +47,7 @@ public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickLi
 
         // Set title
         if (getActivity() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("You are navigating on list: " + listTitle);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("List: " + listTitle);
         }
 
         // Setup RecyclerView
@@ -97,8 +97,47 @@ public class TasksFragment extends Fragment implements TaskAdapter.OnTaskClickLi
     public void onTaskCheckChanged(Task task, boolean isChecked) {
         // Update task completed status
         task.setCompleted(isChecked);
+
+        // Set completion date when completed
+        if (isChecked) {
+            task.setCompletionDate(System.currentTimeMillis());
+        } else {
+            task.setCompletionDate(0); // Reset completion date when unchecked
+        }
+
+        // Update in database
         taskRepository.updateTask(task);
-        adapter.notifyDataSetChanged();
+
+        // Update the local list first
+        for (Task t : tasks) {
+            if (t.getId() == task.getId()) {
+                t.setCompleted(isChecked);
+                if (isChecked) {
+                    t.setCompletionDate(System.currentTimeMillis());
+                } else {
+                    t.setCompletionDate(0);
+                }
+                break;
+            }
+        }
+
+        // Find the position of the changed task
+        int position = -1;
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).getId() == task.getId()) {
+                position = i;
+                break;
+            }
+        }
+
+        // Only update the specific item that changed
+        final int finalPosition = position;
+        if (finalPosition != -1) {
+            recyclerView.post(() -> adapter.notifyItemChanged(finalPosition));
+        } else {
+            // Fallback to reloading all data
+            recyclerView.post(() -> loadTasks());
+        }
     }
 
     @Override
