@@ -46,6 +46,7 @@ import edu.cuhk.csci3310.a3310_project.models.Category;
 import edu.cuhk.csci3310.a3310_project.models.Task;
 import edu.cuhk.csci3310.a3310_project.database.TodoListRepository;
 import edu.cuhk.csci3310.a3310_project.models.TodoList;
+import edu.cuhk.csci3310.a3310_project.reward.PointsManager;
 
 public class StatsFragment extends Fragment {
 
@@ -60,6 +61,9 @@ public class StatsFragment extends Fragment {
     private ViewGroup chartContainerCategory;
     private Spinner timeFilterSpinner;
     private int selectedTimePeriod = 0; // 0 = Today, 1 = Last Week, 2 = Last Month
+    private TextView pointsTextView;
+    private TextView tasksOnTimeTextView;
+    private TextView tasksLateTextView;
 
 
     @Nullable
@@ -91,6 +95,11 @@ public class StatsFragment extends Fragment {
         timeFilterSpinner = view.findViewById(R.id.spinner_time_filter);
         setupTimeFilter();
 
+        // Initialize points-related views
+        pointsTextView = view.findViewById(R.id.text_points);
+        tasksOnTimeTextView = view.findViewById(R.id.text_tasks_on_time);
+        tasksLateTextView = view.findViewById(R.id.text_tasks_late);
+
         loadStats();
 
         return view;
@@ -100,6 +109,7 @@ public class StatsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         loadStats();
+        updatePointsStats();
     }
 
     private void loadStats() {
@@ -127,6 +137,27 @@ public class StatsFragment extends Fragment {
         updateCompletionRate(filteredTasks);
         createWeeklyChart(filteredTasks);
         createCategoryPieChart(filteredTasks);
+    }
+
+    private void updatePointsStats() {
+        if (getContext() == null) return;
+
+        int points = PointsManager.getPoints(requireContext());
+        int tasksOnTime = PointsManager.getTasksCompletedOnTime(requireContext());
+        int tasksLate = PointsManager.getTasksCompletedLate(requireContext());
+
+        // Update UI if views exist
+        if (pointsTextView != null) {
+            pointsTextView.setText("Total Points: " + points);
+        }
+
+        if (tasksOnTimeTextView != null) {
+            tasksOnTimeTextView.setText("On Time: " + tasksOnTime);
+        }
+
+        if (tasksLateTextView != null) {
+            tasksLateTextView.setText("Late: " + tasksLate);
+        }
     }
 
     private void setupListFilter() {

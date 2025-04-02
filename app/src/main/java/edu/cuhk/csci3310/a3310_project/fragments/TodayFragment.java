@@ -26,6 +26,7 @@ import edu.cuhk.csci3310.a3310_project.database.TaskRepository;
 import edu.cuhk.csci3310.a3310_project.models.Task;
 import edu.cuhk.csci3310.a3310_project.models.TaskGroup;
 import edu.cuhk.csci3310.a3310_project.models.TaskWithList;
+import edu.cuhk.csci3310.a3310_project.reward.PointsManager;
 
 public class TodayFragment extends Fragment implements TaskAdapter.OnTaskClickListener {
     private RecyclerView recyclerView;
@@ -129,6 +130,9 @@ public class TodayFragment extends Fragment implements TaskAdapter.OnTaskClickLi
         // Set completion date if being marked as complete
         if (isChecked) {
             task.setCompletionDate(System.currentTimeMillis());
+
+            // Process points for task completion
+            PointsManager.processTaskCompletion(requireContext(), task);
         } else {
             task.setCompletionDate(0);
         }
