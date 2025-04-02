@@ -73,10 +73,25 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
             String dueDate = "Due: " + sdf.format(new Date(task.getDueDate()));
             holder.dueTextView.setText(dueDate);
+
+            // Calculate start of today (midnight)
+            Calendar todayStart = Calendar.getInstance();
+            todayStart.set(Calendar.HOUR_OF_DAY, 0);
+            todayStart.set(Calendar.MINUTE, 0);
+            todayStart.set(Calendar.SECOND, 0);
+            todayStart.set(Calendar.MILLISECOND, 0);
+            long todayStartTime = todayStart.getTimeInMillis();
+
+            // Check if task is overdue (due date before today) but not completed
+            if (task.getDueDate() < todayStartTime && !task.isCompleted()) {
+                holder.dueTextView.setTextColor(Color.RED);
+            } else {
+                holder.dueTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_secondary));
+            }
         } else {
             holder.dueTextView.setText("No due date");
+            holder.dueTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.text_secondary));
         }
-
         // Check if task is before current week
         boolean isHistoricalTask = task.getDueDate() < currentWeekStartTime;
 
