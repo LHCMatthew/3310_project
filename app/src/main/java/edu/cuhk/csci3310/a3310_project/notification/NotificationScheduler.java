@@ -33,7 +33,6 @@ public class NotificationScheduler {
 
             // Set notification time
             long notificationTime = task.getStartTime() - task.getReminderTime() * 60 * 1000; // Convert minutes to milliseconds
-            Toast.makeText(context,task.getReminderTime() + "", Toast.LENGTH_SHORT).show();
 
             Log.d("NotificationScheduler", "Task: " + task.getTitle());
             Log.d("NotificationScheduler", "Current time: " + System.currentTimeMillis());
