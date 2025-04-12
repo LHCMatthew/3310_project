@@ -23,7 +23,7 @@ import edu.cuhk.csci3310.a3310_project.models.TodoList;
 public class AddListFragment extends Fragment {
     private TextInputEditText editListName;
     private RadioGroup colorGroup;
-    private TextInputEditText editListDescription;
+    private TextInputEditText Description;
     private MaterialButton btnSave;
     private MaterialButton btnCancel;
     private TodoListRepository listRepository;
@@ -44,7 +44,7 @@ public class AddListFragment extends Fragment {
 
         // Initialize views
         editListName = view.findViewById(R.id.edit_list_name);
-        editListDescription = view.findViewById(R.id.edit_list_description);
+        Description = view.findViewById(R.id.edit_list_description);
         btnSave = view.findViewById(R.id.btn_save);
         btnCancel = view.findViewById(R.id.btn_cancel);
 
@@ -66,6 +66,7 @@ public class AddListFragment extends Fragment {
         // Create new list object
         TodoList newList = new TodoList();
         newList.setTitle(listName);
+        newList.setDescription(Description.getText().toString());
 
         // Save to database
         long id = listRepository.insertList(newList);

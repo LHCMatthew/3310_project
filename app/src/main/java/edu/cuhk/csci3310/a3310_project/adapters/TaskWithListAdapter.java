@@ -1,6 +1,6 @@
 package edu.cuhk.csci3310.a3310_project.adapters;
 
-import android.graphics.Paint;  // Add this import
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

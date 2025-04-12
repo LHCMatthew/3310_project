@@ -3,7 +3,9 @@ package edu.cuhk.csci3310.a3310_project.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,9 +22,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     private List<TodoList> lists;
     private OnListClickListener listener;
     private TaskRepository taskRepository;
+    private ImageView editListButton;
 
     public interface OnListClickListener {
         void onListClick(TodoList todoList);
+        void onEditListClick(TodoList todoList);
     }
 
     public ListAdapter(List<TodoList> lists, OnListClickListener listener, TaskRepository taskRepository) {
@@ -44,13 +48,22 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         TodoList todoList = lists.get(position);
         holder.titleTextView.setText(todoList.getTitle());
 
+        editListButton = holder.itemView.findViewById(R.id.list_edit_icon);
+
         // Get count of tasks for this week only
-        int thisWeekTaskCount = getThisWeekTaskCount(todoList.getId());
+        int thisWeekTaskCount = getThisWeekTaskCount(todoList.getId()); // Fix: using list ID instead of task count
         holder.countTextView.setText(String.valueOf(thisWeekTaskCount));
+        holder.descriptionTextView.setText(todoList.getDescription());
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onListClick(todoList);
+            }
+        });
+
+        holder.editListButton.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onEditListClick(todoList);
             }
         });
     }
@@ -102,11 +115,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
     static class ListViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
         TextView countTextView;
+        TextView descriptionTextView;
+        ImageView editListButton;
 
         ListViewHolder(View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.text_list_title);
             countTextView = itemView.findViewById(R.id.text_list_count);
+            descriptionTextView = itemView.findViewById(R.id.text_list_description);
+            editListButton = itemView.findViewById(R.id.list_edit_icon);
         }
     }
 }

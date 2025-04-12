@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -73,20 +72,6 @@ public class ListsFragment extends Fragment implements ListAdapter.OnListClickLi
         adapter.updateLists(todoLists);
     }
 
-    // Add a new list
-    public void addNewList(String title) {
-        TodoList newList = new TodoList();
-        newList.setTitle(title);
-
-        // Insert into database
-        long listId = repository.insertList(newList);
-
-        if (listId != -1) {
-            // Reload lists to show the new entry
-            loadLists();
-        }
-    }
-
     @Override
     public void onListClick(TodoList todoList) {
         // Navigate to TasksFragment
@@ -99,6 +84,23 @@ public class ListsFragment extends Fragment implements ListAdapter.OnListClickLi
 
         getParentFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, tasksFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void onEditListClick(TodoList todoList) {
+        // Handle edit list click
+        Bundle args = new Bundle();
+        args.putLong("listId", todoList.getId());
+        args.putString("listTitle", todoList.getTitle());
+        args.putString("listDescription", todoList.getDescription());
+
+        EditListFragment editListFragment = new EditListFragment();
+        editListFragment.setArguments(args);
+
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, editListFragment)
                 .addToBackStack(null)
                 .commit();
     }

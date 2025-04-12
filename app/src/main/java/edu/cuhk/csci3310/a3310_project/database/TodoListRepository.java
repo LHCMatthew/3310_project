@@ -27,6 +27,8 @@ public class TodoListRepository {
         try {
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.KEY_LIST_TITLE, todoList.getTitle());
+            values.put(DatabaseHelper.KEY_LIST_DESCRIPTION, todoList.getDescription());
+            values.put(DatabaseHelper.TASK_COUNT, todoList.getTaskCount()+1);
 
             // Insert the new row, returning the primary key value
             listId = db.insert(DatabaseHelper.TABLE_LISTS, null, values);
@@ -61,8 +63,9 @@ public class TodoListRepository {
                     long id = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_LIST_ID));
                     String title = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_LIST_TITLE));
                     int taskCount = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.TASK_COUNT));
+                    String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_LIST_DESCRIPTION));
 
-                    TodoList todoList = new TodoList(id, title, taskCount);
+                    TodoList todoList = new TodoList(id, title, taskCount, description);
                     todoLists.add(todoList);
                 } while (cursor.moveToNext());
             }
@@ -78,36 +81,6 @@ public class TodoListRepository {
         return todoLists;
     }
 
-    // Get a single todo list by ID
-    public TodoList getListById(long id) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = null;
-        TodoList todoList = null;
-
-        try {
-            cursor = db.query(DatabaseHelper.TABLE_LISTS,
-                    new String[]{DatabaseHelper.KEY_LIST_ID, DatabaseHelper.KEY_LIST_TITLE},
-                    DatabaseHelper.KEY_LIST_ID + "=?",
-                    new String[]{String.valueOf(id)}, null, null, null, null);
-
-            if (cursor != null && cursor.moveToFirst()) {
-                todoList = new TodoList(
-                        cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_LIST_ID)),
-                        cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_LIST_TITLE))
-                );
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting list by ID", e);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-            db.close();
-        }
-
-        return todoList;
-    }
-
     // Update a todo list
     public int updateList(TodoList todoList) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -116,6 +89,7 @@ public class TodoListRepository {
         try {
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.KEY_LIST_TITLE, todoList.getTitle());
+            values.put(DatabaseHelper.KEY_LIST_DESCRIPTION, todoList.getDescription());
 
             rowsAffected = db.update(DatabaseHelper.TABLE_LISTS, values,
                     DatabaseHelper.KEY_LIST_ID + " = ?",

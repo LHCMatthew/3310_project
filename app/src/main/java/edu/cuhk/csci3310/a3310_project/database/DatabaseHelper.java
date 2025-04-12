@@ -9,7 +9,7 @@ import java.sql.Time;
 public class DatabaseHelper extends SQLiteOpenHelper {
     // Database Info
     private static final String DATABASE_NAME = "todoDatabase";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     // Table Names
     public static final String TABLE_LISTS = "lists";
@@ -20,6 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String KEY_LIST_ID = "id";
     public static final String KEY_LIST_TITLE = "title";
     public static final String TASK_COUNT = "task_count";
+    public static final String KEY_LIST_DESCRIPTION = "description";
 
     // Tasks Table Columns
     public static final String KEY_TASK_ID = "id";
@@ -47,6 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "(" +
                 KEY_LIST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 KEY_LIST_TITLE + " TEXT," +
+                KEY_LIST_DESCRIPTION + " TEXT," +
                 TASK_COUNT + " DEFAULT 0" +
                 ")";
 
