@@ -32,7 +32,12 @@ public class NotificationScheduler {
             );
 
             // Set notification time
-            long notificationTime = task.getStartTime() - task.getReminderTime() * 60 * 1000; // Convert minutes to milliseconds
+            long notificationTime;
+            if(task.isAllday()) {
+                notificationTime = task.getDueDate(); // set it to the due date (at 00:00 of the due date)
+            }
+            else
+                notificationTime = task.getStartTime() - task.getReminderTime() * 60 * 1000; // Convert minutes to milliseconds
 
             Log.d("NotificationScheduler", "Task: " + task.getTitle());
             Log.d("NotificationScheduler", "Current time: " + System.currentTimeMillis());
