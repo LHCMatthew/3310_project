@@ -194,6 +194,15 @@
                         android:layout_weight="1"
                         android:text="Late: 0" />
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/button_reset_points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Reset Statistics"
+                    android:backgroundTint="?attr/colorPrimary"
+                    android:textColor="#FFFFFF" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

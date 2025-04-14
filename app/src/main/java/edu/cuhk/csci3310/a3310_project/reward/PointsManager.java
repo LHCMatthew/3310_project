@@ -168,4 +168,18 @@ public class PointsManager {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return prefs.getInt(KEY_TASKS_COMPLETED_LATE, 0);
     }
+
+    public static void resetPointsStatistics(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // Reset all point statistics
+        editor.putInt(KEY_POINTS, 0);
+        editor.putInt(KEY_TASKS_COMPLETED_ON_TIME, 0);
+        editor.putInt(KEY_TASKS_COMPLETED_LATE, 0);
+
+        editor.apply();
+
+        Log.d(TAG, "Points statistics reset");
+    }
 }

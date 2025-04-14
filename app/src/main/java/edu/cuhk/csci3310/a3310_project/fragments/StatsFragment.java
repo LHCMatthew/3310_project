@@ -5,14 +5,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -99,6 +102,25 @@ public class StatsFragment extends Fragment {
         pointsTextView = view.findViewById(R.id.text_points);
         tasksOnTimeTextView = view.findViewById(R.id.text_tasks_on_time);
         tasksLateTextView = view.findViewById(R.id.text_tasks_late);
+
+        Button resetPointsButton = view.findViewById(R.id.button_reset_points);
+        resetPointsButton.setOnClickListener(v -> {
+            // Show confirmation dialog
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Reset Points Statistics")
+                    .setMessage("Are you sure you want to reset all points statistics? This cannot be undone.")
+                    .setPositiveButton("Reset", (dialog, which) -> {
+                        // Reset points
+                        PointsManager.resetPointsStatistics(requireContext());
+                        // Update UI
+                        updatePointsStats();
+                        // Show confirmation
+                        Toast.makeText(requireContext(),
+                                "Points statistics have been reset", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
 
         loadStats();
 
