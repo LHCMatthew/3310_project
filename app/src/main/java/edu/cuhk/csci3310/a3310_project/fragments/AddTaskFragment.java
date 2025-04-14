@@ -424,7 +424,6 @@ public class AddTaskFragment extends Fragment {
         String description = descriptionEditText.getText().toString().trim();
         int priority = getSelectedPriority();
 
-
         // Validate input
         if (title.isEmpty()) {
             titleEditText.setError("Title is required");
@@ -434,6 +433,17 @@ public class AddTaskFragment extends Fragment {
         if (selectedListId == -1) {
             Toast.makeText(requireContext(), "Please select a list", Toast.LENGTH_SHORT).show();
             return;
+        }
+
+        // Add this validation for due date
+        if (selectedDueDate == 0) {
+            Toast.makeText(requireContext(), "Please select a date", Toast.LENGTH_SHORT).show();
+            // Highlight the due date field with error styling
+            dueDateInput.setBackgroundResource(R.drawable.error_background);
+            return;
+        } else {
+            // Reset background if validation passes
+            dueDateInput.setBackgroundResource(android.R.drawable.edit_text);
         }
 
         // Create or update task
