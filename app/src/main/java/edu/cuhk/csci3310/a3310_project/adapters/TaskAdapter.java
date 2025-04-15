@@ -114,7 +114,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         // TESTING ONLY - Comment or remove these lines after testing
         // Original line: holder.checkBox.setEnabled(!isHistoricalTask);
         // Now enabling all checkboxes for testing
-        holder.checkBox.setEnabled(true); // REMOVE AFTER TESTING
+        holder.checkBox.setEnabled(!isHistoricalTask); // REMOVE AFTER TESTING
 
         // Visual indicators for historical tasks
         if (isHistoricalTask) {
@@ -122,7 +122,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             holder.itemView.setBackgroundColor(Color.parseColor("#F5F5F5")); // Light gray
 
             // Add historical indicator
-            holder.dueTextView.setText(holder.dueTextView.getText() + " (Historical) *Checkbox can be checked for now as testing"); // Modified for testing
+            holder.dueTextView.setText(holder.dueTextView.getText() + " (Historical)"); // Modified for testing
         } else {
             holder.checkBox.setAlpha(1.0f);
             holder.itemView.setBackgroundColor(Color.TRANSPARENT);
@@ -137,7 +137,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         // TESTING ONLY - Comment or remove these lines after testing
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (buttonView.isPressed() && listener != null) {
+            if (buttonView.isPressed() && !isHistoricalTask && listener != null) {
                 // TESTING: Removed !isHistoricalTask condition to allow historical task updates
                 // Original condition: if (buttonView.isPressed() && !isHistoricalTask && listener != null)
                 listener.onTaskCheckChanged(task, isChecked);

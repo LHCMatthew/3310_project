@@ -408,12 +408,33 @@ public class AddTaskFragment extends Fragment {
 
             // Format the reminder time display
             long minutes = reminderTimeOffset;
+            String displayText;
 
-            String displayText = "";
-            if (minutes > 0) {
-                displayText += minutes + " minute" + (minutes > 1 ? "s" : "");
+            if (minutes == 1440) {
+                displayText = "1 day before";
+            } else if (minutes == 120) {
+                displayText = "2 hours before";
+            } else if (minutes == 60) {
+                displayText = "1 hour before";
+            } else if (minutes == 30) {
+                displayText = "30 minutes before";
+            } else if (minutes == 15) {
+                displayText = "15 minutes before";
+            } else if (minutes == 5) {
+                displayText = "5 minutes before";
+            } else if (minutes > 60) {
+                long hours = minutes / 60;
+                long remainingMinutes = minutes % 60;
+                displayText = hours + " hour" + (hours > 1 ? "s" : "");
+                if (remainingMinutes > 0) {
+                    displayText += " " + remainingMinutes + " minute" + (remainingMinutes > 1 ? "s" : "");
+                }
+                displayText += " before";
+            } else {
+                displayText = minutes + " minute" + (minutes > 1 ? "s" : "") + " before";
             }
-            reminderTimeText.setText(displayText + " before");
+
+            reminderTimeText.setText(displayText);
         } else {
             reminderTimeText.setText("None");
         }
@@ -435,7 +456,6 @@ public class AddTaskFragment extends Fragment {
             return;
         }
 
-        // Add this validation for due date
         if (selectedDueDate == 0) {
             Toast.makeText(requireContext(), "Please select a date", Toast.LENGTH_SHORT).show();
             // Highlight the due date field with error styling
